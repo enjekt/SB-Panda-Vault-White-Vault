@@ -1,0 +1,59 @@
+server:
+  port: 8088
+
+management:
+  context-path: /mgmt
+  
+security:
+  user:
+    name: user
+    password: password
+
+spring:
+  boot:
+    admin:
+      url: http://localhost:9080
+      auth:
+        username: mgmt
+        password: mgmt
+  application:
+    name: admin-server
+    
+logging:
+  level:
+    org.springframework.security: INFO
+    spring.jmx:
+    enabled: false
+
+spring.datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:./whitevault-test-db
+    username: sa
+    password: 
+spring.jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+
+#default project info followed by actual injected pom-specified values.
+project:
+  name: whitevault
+  version: 0.1
+  description: White Vault Server
+info:
+  build:
+    artifact: ${project.artifactId}
+    name: ${project.name}
+    description: ${project.description}
+    version: ${project.version}
+
+whitevault.service:
+  name: 'default profile:'
+---
+spring:
+  profiles: test
+
+spring.jpa:
+    hibernate.ddl-auto: create-drop
+
+whitevault.service:
+  name: 'test profile:'
