@@ -36,8 +36,8 @@ public class WhiteVaultRepositoryTest {
 	public void testStoreAndRetrieve() {
 		this.entityManager.persist(new TokenPandaPair(TOKEN, PANDA));
 		TokenPandaPair pair = this.repository.findByToken(TOKEN_STR);
-		assertEquals(pair.getToken(),TOKEN);
-		assertEquals(pair.getPanda(),PANDA);
+		assertEquals(pair.getToken(),TOKEN_STR);
+		assertEquals(pair.getPanda(),PANDA_STR);
 	}
 
 }
