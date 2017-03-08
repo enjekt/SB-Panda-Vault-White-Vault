@@ -22,6 +22,8 @@ import org.enjket.panda.whitevault.models.Panda;
 import org.enjket.panda.whitevault.models.Token;
 import org.enjket.panda.whitevault.service.BlackVaultService;
 import org.enjket.panda.whitevault.service.WhiteVaultService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,7 +38,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 
 /**
- * The Class WhiteVaultRestController.
+ * The Class WhiteVaultRestController is the main entry point for calls into the White Vault.
  */
 @RestController
 public class WhiteVaultRestController {
@@ -48,6 +50,8 @@ public class WhiteVaultRestController {
 	/** The black vault service. */
 	@Autowired
 	BlackVaultService blackVaultService;
+	
+	private static Logger logger = LoggerFactory.getLogger(WhiteVaultRestController.class);
 	//-------------------Retrieve a single PAN--------------------------------------------------------
 	
 	/**
@@ -58,17 +62,17 @@ public class WhiteVaultRestController {
 	 */
 	@RequestMapping(value = "/token/{token}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Pan> getPan(@PathVariable("token") long id) {
-		System.out.println("Fetching token with id " + id);
+		logger.debug("Fetching token with id " + id);
 		Token token = new Token(String.valueOf(id));
-		System.out.println("The token value: " + token.getToken());
+		logger.debug("The token value: " + token.getToken());
 		Panda panda = whiteVaultService.getPanda(token);
 		//TODO Error handling and reporting
 		/*if (panda == null) {
 			return new ResponseEntity<Pan>(HttpStatus.NOT_FOUND);
 		}*/
-		System.out.println("The panda value: " + panda.getPanda());
+		logger.debug("The panda value: " + panda.getPanda());
 		Pad pad = blackVaultService.getPad(token);
-		System.out.println("Retreived pad: "+ pad);
+		logger.debug("Retreived pad: "+ pad);
 		Pan pan = whiteVaultService.restorePan(panda, pad);
 		
 		return new ResponseEntity<Pan>(pan, HttpStatus.OK);
@@ -87,7 +91,7 @@ public class WhiteVaultRestController {
 	 */
 	@RequestMapping(value = "/pan/{pan}", method = RequestMethod.POST)
 	public ResponseEntity<Token> createToken(@PathVariable("pan") long panNo, UriComponentsBuilder ucBuilder) {
-		System.out.println("Creating token ");
+		logger.debug("Creating token ");
 		Pan pan = new Pan(panNo);
 		Token token = whiteVaultService.createToken(pan);
 		Pad pad = whiteVaultService.createPad();
@@ -112,7 +116,7 @@ public class WhiteVaultRestController {
 	 */
 	@RequestMapping(value = "/token/{token}", method = RequestMethod.DELETE)
 	public void deleteToken(@PathVariable("token") long id) {
-		System.out.println("Fetching & Deleting Token with id " + id);
+		logger.debug("Fetching & Deleting Token with id " + id);
 
 		whiteVaultService.deleteToken(new Token(String.valueOf(id)));
 		//TODO Send the delete to the Black Vault as well.
