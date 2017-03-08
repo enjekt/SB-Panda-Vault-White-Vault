@@ -14,11 +14,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import static org.enjket.panda.whitevault.TestConstants.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @DataJpaTest
-public class WhiteVaultServiceTest {
+public class WhiteVaultRepositoryTest {
 
 	@MockBean
 	private BlackVaultService remoteService;
@@ -29,12 +30,12 @@ public class WhiteVaultServiceTest {
 	@Autowired
 	private WhiteVaultRepository repository;
 
-	private static final String TOKEN = "4929695988240755";
-	private static final String  PANDA = "14929694241140755";
+
+	
 	@Test
 	public void testStoreAndRetrieve() {
 		this.entityManager.persist(new TokenPandaPair(TOKEN, PANDA));
-		TokenPandaPair pair = this.repository.findByToken(TOKEN);
+		TokenPandaPair pair = this.repository.findByToken(TOKEN_STR);
 		assertEquals(pair.getToken(),TOKEN);
 		assertEquals(pair.getPanda(),PANDA);
 	}
