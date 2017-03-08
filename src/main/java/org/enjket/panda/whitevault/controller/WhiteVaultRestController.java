@@ -105,7 +105,6 @@ public class WhiteVaultRestController {
 	}
 
 	
-	
 
 	//------------------- Delete a User --------------------------------------------------------
 	
@@ -118,8 +117,9 @@ public class WhiteVaultRestController {
 	public void deleteToken(@PathVariable("token") long id) {
 		logger.debug("Fetching & Deleting Token with id " + id);
 
-		whiteVaultService.deleteToken(new Token(String.valueOf(id)));
-		//TODO Send the delete to the Black Vault as well.
+		Token deleteToken = new Token(String.valueOf(id));
+		whiteVaultService.deleteToken(deleteToken);
+		blackVaultService.deleteToken(deleteToken);
 	}
 
 

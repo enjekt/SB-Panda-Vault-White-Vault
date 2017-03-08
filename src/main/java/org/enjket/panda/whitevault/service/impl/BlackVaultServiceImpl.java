@@ -26,40 +26,54 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * The Class BlackVaultServiceImpl is used to send messages to the Black Vault to store
- * and retrieve pads based on a token.
+ * The Class BlackVaultServiceImpl is used to send messages to the Black Vault
+ * to store and retrieve pads based on a token.
  */
 @Service("blackVaultService")
 @Transactional
-public class BlackVaultServiceImpl implements BlackVaultService  {
+public class BlackVaultServiceImpl implements BlackVaultService {
 
-	/* (non-Javadoc)
-	 * @see org.enjket.panda.whitevault.service.BlackVaultService#getPad(org.enjket.panda.whitevault.models.Token)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.enjket.panda.whitevault.service.BlackVaultService#getPad(org.enjket.
+	 * panda.whitevault.models.Token)
 	 */
 	@Override
 	public Pad getPad(Token token) {
-		 RestTemplate restTemplate = createTemplate();
-	     Pad pad = restTemplate.getForObject("http://localhost:8089/pad/"+token.getToken(), Pad.class);
+		RestTemplate restTemplate = createTemplate();
+		Pad pad = restTemplate.getForObject("http://localhost:8089/pad/" + token.getToken(), Pad.class);
 
-	     return pad;
+		return pad;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.enjket.panda.whitevault.service.BlackVaultService#store(org.enjket.panda.whitevault.models.Token, org.enjket.panda.whitevault.models.Pad)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.enjket.panda.whitevault.service.BlackVaultService#store(org.enjket.
+	 * panda.whitevault.models.Token, org.enjket.panda.whitevault.models.Pad)
 	 */
 	public void store(Token token, Pad pad) {
-		 RestTemplate restTemplate = createTemplate();
+		RestTemplate restTemplate = createTemplate();
 
-		TokenPadPair pair = new TokenPadPair(token,pad);
+		TokenPadPair pair = new TokenPadPair(token, pad);
 		restTemplate.postForLocation("http://localhost:8089/pad", pair);
 	}
-	
-	private RestTemplate createTemplate() {
-		 RestTemplate restTemplate = new RestTemplate();
 
-		 restTemplate.getInterceptors().add(
-				  new BasicAuthorizationInterceptor("user", "password"));
-		 return restTemplate;
+	@Override
+	public void deleteToken(Token deleteToken) {
+		RestTemplate restTemplate = createTemplate();
+		restTemplate.delete("http://localhost:8089/token/" + deleteToken.getToken(), Token.class);
+
+	}
+
+	private RestTemplate createTemplate() {
+		RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor("user", "password"));
+		return restTemplate;
 	}
 
 }

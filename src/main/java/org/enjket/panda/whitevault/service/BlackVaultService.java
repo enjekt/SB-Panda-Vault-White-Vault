@@ -26,7 +26,7 @@ import org.enjket.panda.whitevault.models.Token;
 public interface BlackVaultService {
 
 	/**
-	 * Gets the pad.
+	 * Gets the pad from the black vault based on its correlated token.
 	 *
 	 * @param token the token
 	 * @return the pad
@@ -34,10 +34,17 @@ public interface BlackVaultService {
 	public Pad getPad(Token token);
 	
 	/**
-	 * Store.
+	 * Store the token key and pad value.
 	 *
 	 * @param token the token
 	 * @param pad the pad
 	 */
 	public void store(Token token, Pad pad);
+
+	/**
+	 * Delete token and the associated pad.
+	 * 
+	 * @param deleteToken the delete token
+	 */
+	public void deleteToken(Token deleteToken);
 }
